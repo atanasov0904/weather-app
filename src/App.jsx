@@ -2,7 +2,18 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
+  const cities = {
+    sofia: { name: "Sofia", lat: 42.6975, lon: 23.3241 },
+    varna: { name: "Varna", lat: 43.2141, lon: 27.9147 },
+    plovdiv: { name: "Plovdiv", lat: 42.1354, lon: 24.7453 },
+    burgas: { name: "Burgas", lat: 42.5048, lon: 27.4626 },
+  };
+
+  const [cityKey, setCityKey] = useState("sofia");
+  const city = cities[cityKey];
+
   const [weather, setWeather] = useState(null);
+  const [weekly, setWeekly] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const interpretWeatherCode = (code) => {
@@ -36,50 +47,75 @@ function App() {
       96: "Thunderstorm with slight hail ⛈️",
       99: "Thunderstorm with heavy hail ⛈️",
     };
-
     return weatherCodes[code] || "Unknown weather";
   };
 
+  const getWeatherIcon = (code) => {
+    const icons = {
+      0: "☀️",
+      1: "🌤️",
+      2: "⛅",
+      3: "☁️",
+      45: "🌫️",
+      48: "🌫️",
+      51: "🌧️",
+      53: "🌧️",
+      55: "🌧️",
+      56: "❄️",
+      57: "❄️",
+      61: "🌧️",
+      63: "🌧️",
+      65: "🌧️",
+      66: "❄️",
+      67: "❄️",
+      71: "❄️",
+      73: "❄️",
+      75: "❄️",
+      77: "❄️",
+      80: "🌦️",
+      81: "🌦️",
+      82: "🌧️",
+      85: "❄️",
+      86: "❄️",
+      95: "⛈️",
+      96: "⛈️",
+      99: "⛈️",
+    };
+    return icons[code] || "❓";
+  };
+
   const getBackgroundStyles = (code) => {
-    if (code === 0 || code === 1) {
-      return {
-        background: "radial-gradient(circle at top right, #3b82f6, transparent), radial-gradient(circle at bottom left, #8b5cf6, transparent)",
-      };
-    } else if (code >= 2 && code <= 3) {
-      return {
-        background: "radial-gradient(circle at top right, #64748b, transparent), radial-gradient(circle at bottom left, #475569, transparent)",
-      };
+    if (code === 0) {
+      return "linear-gradient(to top, #87ceeb, #bde0fe)";
+    } else if (code === 1) {
+      return "linear-gradient(to top, #a0c4ff, #caf0f8)";
+    } else if (code === 2 || code === 3) {
+      return "linear-gradient(to top, #90a4ae, #cfd8dc)";
     } else if (code >= 45 && code <= 48) {
-      return {
-        background: "radial-gradient(circle at top right, #94a3b8, transparent), radial-gradient(circle at bottom left, #64748b, transparent)",
-      };
-    } else if ((code >= 51 && code <= 57) || (code >= 61 && code <= 67) || (code >= 80 && code <= 82)) {
-      return {
-        background: "radial-gradient(circle at top right, #3b82f6, transparent), radial-gradient(circle at bottom left, #8b5cf6, transparent)",
-      };
+      return "linear-gradient(to top, #b0bec5, #eceff1)";
+    } else if (
+      (code >= 51 && code <= 57) ||
+      (code >= 61 && code <= 67) ||
+      (code >= 80 && code <= 82)
+    ) {
+      return "linear-gradient(to top, #4f76a1, #7ea2c4)";
     } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
-      return {
-        background: "radial-gradient(circle at top right, #94a3b8, transparent), radial-gradient(circle at bottom left, #64748b, transparent)",
-      };
+      return "linear-gradient(to top, #e0f7fa, #ffffff)";
     } else if (code >= 95 && code <= 99) {
-      return {
-        background: "radial-gradient(circle at top right, #ef4444, transparent), radial-gradient(circle at bottom left, #b91c1c, transparent)",
-      };
+      return "linear-gradient(to top, #373737, #616161)";
     } else {
-      return {
-        background: "radial-gradient(circle at top right, #3b82f6, transparent), radial-gradient(circle at bottom left, #8b5cf6, transparent)",
-      };
+      return "linear-gradient(to top, #3b82f6, #8b5cf6)";
     }
-  }
+  };
 
   const fetchWeather = async () => {
     setLoading(true);
     try {
-      const url =
-        "https://api.open-meteo.com/v1/forecast?latitude=42.6975&longitude=23.3241&current=temperature_2m,weather_code";
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current_weather=true&daily=temperature_2m_max,weathercode&timezone=Europe%2FSofia`;
       const response = await fetch(url);
       const data = await response.json();
-      setWeather(data.current);
+      setWeather(data.current_weather);
+      setWeekly(data.daily);
     } catch (error) {
       console.error("Error fetching weather data:", error);
     } finally {
@@ -89,50 +125,89 @@ function App() {
 
   useEffect(() => {
     fetchWeather();
-  }, []);
+  }, [cityKey]);
 
   return (
-    <div 
-      className="App" 
-      style={{ background: weather ? getBackgroundStyles(weather.weather_code) : "#1e3a8a" }}
+    <div
+      className="App"
+      style={{
+        background: weather
+          ? getBackgroundStyles(weather.weathercode)
+          : "#1e3a8a",
+      }}
     >
       <div className="weather-container">
-        <div className="weather-card">
-          <h1 className="city-name">Sofia, Bulgaria</h1>
-          {weather != null ? (
-            <>
-              <div className="temp-display">
-                <span className="temp-number">{weather.temperature_2m}</span>
-                <span className="temp-unit">°C</span>
-              </div>
-              <p className="description">
-                {interpretWeatherCode(weather.weather_code)}
-              </p>
-              <button 
-  className={`refresh-btn ${loading ? 'loading' : ''}`} 
-  onClick={fetchWeather}
-  disabled={loading}
->
-  <svg
-  className="refresh-icon"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  strokeWidth="2"
-  strokeLinecap="round"
-  strokeLinejoin="round"
->
-  <path d="M23 4v6h-6" />
-  <path d="M1 20v-6h6" />
-  <path d="M3.51 9a9 9 0 0114.13-3.36L23 10" />
-  <path d="M20.49 15a9 9 0 01-14.13 3.36L1 14" />
-</svg>
-</button>
-            </>
-          ) : (
-            <div className="loader">Loading...</div>
-          )}
+        <div className="top-bar">
+          <div className="headliner">
+            <h1>Weather</h1>
+          </div>
+          <button
+            className={`refresh-btn ${loading ? "loading" : ""}`}
+            onClick={fetchWeather}
+            disabled={loading}
+          >
+            <svg
+              className="refresh-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M23 4v6h-6" />
+              <path d="M1 20v-6h6" />
+              <path d="M3.51 9a9 9 0 0114.13-3.36L23 10" />
+              <path d="M20.49 15a9 9 0 01-14.13 3.36L1 14" />
+            </svg>
+          </button>
         </div>
+
+        <div className="city-selector">
+          <span className="city-name">{city.name}, Bulgaria</span>
+          <select value={cityKey} onChange={(e) => setCityKey(e.target.value)}>
+            {Object.entries(cities).map(([key, { name }]) => (
+              <option key={key} value={key}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {weather ? (
+          <>
+            <div className="temp-display">
+              <span className="temp-number">{weather.temperature}</span>
+              <span className="temp-unit">°C</span>
+            </div>
+            <p className="description">
+              {interpretWeatherCode(weather.weathercode)}
+            </p>
+
+            {weekly && (
+              <div className="weekly-forecast">
+                {weekly.time.slice(1, 7).map((date, i) => (
+                  <div className="forecast-row" key={date}>
+                    <span className="forecast-day">
+                      {new Date(date).toLocaleDateString("en-US", {
+                        weekday: "short",
+                      })}
+                    </span>
+                    <span className="forecast-icon">
+                      {getWeatherIcon(weekly.weathercode[i + 1])}
+                    </span>
+                    <span className="forecast-temp">
+                      {Math.round(weekly.temperature_2m_max[i + 1])}°C
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="loader">Loading...</div>
+        )}
+
         <p className="read-the-docs">Data provided by Open-Meteo API</p>
       </div>
     </div>

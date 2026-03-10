@@ -34,19 +34,92 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 400px;
+  gap: 12px;
+}
+
+.headliner {
+  position: relative;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.refresh-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.refresh-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.refresh-btn:active {
+  transform: scale(0.96);
+}
+
+.refresh-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.refresh-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.refresh-btn.loading .refresh-icon {
+  animation: spin 1s linear infinite;
+}
+
 .weather-container {
+  position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 40px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .weather-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 32px;
   padding: 40px;
   width: 320px;
@@ -55,13 +128,30 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.city-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .city-name {
   font-size: 1.8rem;
-  margin: 0 0 10px 0;
-  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  color: #fff;
+}
+
+.city-selector select {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .temp-display {
@@ -84,47 +174,49 @@
 .description {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #a5b4fc;
+  color: #fff;
   margin-bottom: auto;
 }
 
-.refresh-btn {
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
+.weekly-forecast {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.forecast-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(154, 153, 153, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.refresh-btn:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.2);
+.forecast-day {
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: 40px;
+  opacity: 0.85;
 }
 
-.refresh-btn:active {
-  transform: scale(0.96);
+.forecast-icon {
+  font-size: 1.3rem;
 }
 
-.refresh-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-.refresh-icon {
-  width: 32px;
-  height: 32px;
-  color: white;
-  transition: transform 0.3s ease;
-}
-
-.refresh-btn.loading .refresh-icon {
-  animation: spin 1s linear infinite;
+.forecast-temp {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  width: 40px;
+  text-align: right;
 }
 
 @keyframes spin {
