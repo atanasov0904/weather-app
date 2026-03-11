@@ -3,10 +3,14 @@ import "./App.css";
 
 function App() {
   const cities = {
-    sofia: { name: "Sofia", lat: 42.6975, lon: 23.3241 },
-    varna: { name: "Varna", lat: 43.2141, lon: 27.9147 },
-    plovdiv: { name: "Plovdiv", lat: 42.1354, lon: 24.7453 },
-    burgas: { name: "Burgas", lat: 42.5048, lon: 27.4626 },
+    sofia: { name: "Sofia, Bulgaria", lat: 42.6975, lon: 23.3241 },
+    plovdiv: { name: "Plovdiv, Bulgaria", lat: 42.1354, lon: 24.7453 },
+    varna: { name: "Varna, Bulgaria", lat: 43.2141, lon: 27.9147 },
+    burgas: { name: "Burgas, Bulgaria", lat: 42.5048, lon: 27.4626 },
+    ruse: { name: "Ruse, Bulgaria", lat: 43.8563, lon: 25.9708 },
+    staraZagora: { name: "Stara Zagora, Bulgaria", lat: 42.4244, lon: 25.6345 },
+    pleven: { name: "Pleven, Bulgaria", lat: 43.4176, lon: 24.6065 },
+    velikoTarnovo: { name: "Veliko Tarnovo, Bulgaria", lat: 43.0757, lon: 25.6172 },
   };
 
   const [cityKey, setCityKey] = useState("sofia");
@@ -86,25 +90,25 @@ function App() {
 
   const getBackgroundStyles = (code) => {
     if (code === 0) {
-      return "linear-gradient(to top, #87ceeb, #bde0fe)";
+      return "linear-gradient(to top,rgb(135, 172, 235),rgb(254, 249, 189))";
     } else if (code === 1) {
-      return "linear-gradient(to top, #a0c4ff, #caf0f8)";
+      return "linear-gradient(to top,rgb(160, 220, 255),rgb(255, 235, 175))";
     } else if (code === 2 || code === 3) {
-      return "linear-gradient(to top, #90a4ae, #cfd8dc)";
+      return "linear-gradient(to top,rgb(144, 164, 174),rgb(207, 214, 220))";
     } else if (code >= 45 && code <= 48) {
-      return "linear-gradient(to top, #b0bec5, #eceff1)";
+      return "linear-gradient(to top,rgb(176, 190, 197),rgb(236, 239, 241))";
     } else if (
       (code >= 51 && code <= 57) ||
       (code >= 61 && code <= 67) ||
       (code >= 80 && code <= 82)
     ) {
-      return "linear-gradient(to top, #4f76a1, #7ea2c4)";
+      return "linear-gradient(to top,rgb(79, 117, 161),rgb(126, 155, 196))";
     } else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
-      return "linear-gradient(to top, #e0f7fa, #ffffff)";
+      return "linear-gradient(to top,rgba(224, 244, 250, 0.8),rgba(168, 186, 255, 0.83))";
     } else if (code >= 95 && code <= 99) {
-      return "linear-gradient(to top, #373737, #616161)";
+      return "linear-gradient(to top,rgb(55, 55, 55),rgb(97, 97, 97))";
     } else {
-      return "linear-gradient(to top, #3b82f6, #8b5cf6)";
+      return "linear-gradient(to top,rgb(59, 131, 246),rgb(138, 92, 246))";
     }
   };
 
@@ -164,7 +168,6 @@ function App() {
         </div>
 
         <div className="city-selector">
-          <span className="city-name">{city.name}, Bulgaria</span>
           <select value={cityKey} onChange={(e) => setCityKey(e.target.value)}>
             {Object.entries(cities).map(([key, { name }]) => (
               <option key={key} value={key}>
